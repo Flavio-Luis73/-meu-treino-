@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Acompanhe seus treinos de musculação e cardio">
+  <meta name="theme-color" content="#0b0f14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Meu Treino">
+  
+  <title>Meu Treino</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0b0f14 0%, #1a1f2e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 16px;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 2em;
+      color: #00d4ff;
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+    
+    .subtitle {
+      color: #8892b0;
+      font-size: 0.95em;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .card h2 {
+      color: #00d4ff;
+      margin-bottom: 12px;
+      font-size: 1.3em;
+    }
+    
+    .card p {
+      color: #8892b0;
+      margin-bottom: 16px;
+    }
+    
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      color: #0b0f14;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e0e0e0;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #ff4757 0%, #cc0033 100%);
+      color: white;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #2ed573 0%, #1a9b5a 100%);
+    }
+    
+    .workout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .workout-btn {
+      padding: 12px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 8px;
+      color: #00d4ff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .workout-btn:hover, .workout-btn.active {
+      background: rgba(0, 212, 255, 0.3);
+      border-color: #00d4ff;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #ccd6f6;
+      font-weight: 500;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 1em;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #00d4ff;
+    }
+    
+    .date-display {
+      text-align: center;
+      font-size: 1.2em;
+      color: #00d4ff;
+      margin: 16px 0;
+      padding: 12px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 8px;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .stat-item {
+      text-align: center;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+    
+    .stat-value {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #00d4ff;
+    }
+    
+    .stat-label {
+      font-size: 0.85em;
+      color: #8892b0;
+      margin-top: 4px;
+    }
+    
+    .history-list {
+      margin-top: 12px;
+    }
+    
+    .history-item {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid #00d4ff;
+      margin-bottom: 8px;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .history-date {
+      color: #00d4ff;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .history-details {
+      color: #8892b0;
+      font-size: 0.9em;
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #2ed573;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .section {
+      margin-bottom: 24px;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.6em;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>💪 Meu Treino</h1>
+      <p class="subtitle">5 dias · 60 min · A / B / Cardio + Mobilidade</p>
+    </header>
+
+    <!-- Menu Principal -->
+    <div id="main-menu">
+      <div class="card">
+        <h2>Escolha o treino</h2>
+        <p>Marque feito, registre cargas e acompanhe a semana.</p>
+        <div class="workout-grid">
+          <button class="workout-btn" onclick="selectWorkout('A')">Treino A</button>
+          <button class="workout-btn" onclick="selectWorkout('B')">Treino B</button>
+          <button class="workout-btn" onclick="selectWorkout('cardio')">Cardio + Mobilidade</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Progresso</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="week-count">0</div>
+            <div class="stat-label">Esta Semana</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="last3-count">0</div>
+            <div class="stat-label">Últimos 3</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="total-count">0</div>
+            <div class="stat-label">Total</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Histórico</h2>
+        <div id="history-list" class="history-list">
+          <p style="color: #8892b0;">Nenhum treino registrado ainda.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Configurações</h2>
+        <button class="btn btn-secondary" onclick="exportData()">📥 Exportar backup</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">📤 Importar backup</button>
+        <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+        <button class="btn btn-danger" onclick="clearAllData()">🗑️ Zerar todos os dados</button>
+      </div>
+
+      <div class="card" style="background: rgba(0, 212, 255, 0.05);">
+        <p style="margin: 0; font-size: 0.9em;">💡 Dica: se o app não atualizar, feche e abra, ou limpe cache do navegador.</p>
+      </div>
+    </div>
+
+    <!-- Tela de Registro de Treino -->
+    <div id="workout-screen" class="hidden">
+      <div class="card">
+        <h2 id="workout-title">Treino</h2>
+        <div class="date-display" id="current-date"></div>
+        
+        <div class="form-group">
+          <label for="workout-date">Data do registro</label>
+          <input type="date" id="workout-date">
+          <small style="color: #8892b0; display: block; margin-top: 4px;">Você pode registrar treinos em dias passados.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="weight">Peso (kg) - opcional</label>
+          <input type="number" id="weight" step="0.1" placeholder="Ex: 75.5">
+        </div>
+
+        <div class="form-group">
+          <label for="waist">Circunferência abdominal (cm) - opcional</label>
+          <input type="number" id="waist" step="0.1" placeholder="Ex: 85">
+        </div>
+
+        <div class="form-group">
+          <label for="observation">Observação do dia - opcional</label>
+          <textarea id="observation" rows="3" placeholder="Como foi o treino?"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Exercícios concluídos:</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="exercise-1" checked>
+            <label for="exercise-1" style="margin: 0;">Exercício 1</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="exercise-2" checked>
+            <label for="exercise-2" style="margin: 0;">Exercício 2</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="exercise-3" checked>
+            <label for="exercise-3" style="margin: 0;">Exercício 3</label>
+          </div>
+        </div>
+
+        <button class="btn btn-success" onclick="saveWorkout()">✅ Salvar Treino</button>
+        <button class="btn btn-secondary" onclick="backToMenu()">← Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // Registro do Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW registrado:', registration);
+          })
+          .catch(error => {
+            console.log('SW falhou:', error);
+          });
+      });
+    }
+
+    // Estado da aplicação
+    let currentWorkout = '';
+    const DB_KEY = 'meu_treino_data';
+
+    // Carregar dados
+    function loadData() {
+      const data = localStorage.getItem(DB_KEY);
+      return data ? JSON.parse(data) : { workouts: [] };
+    }
+
+    // Salvar dados
+    function saveData(data) {
+      localStorage.setItem(DB_KEY, JSON.stringify(data));
+    }
+
+    // Mostrar toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = type === 'success' ? '#2ed573' : '#ff4757';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Selecionar treino
+    function selectWorkout(type) {
+      currentWorkout = type;
+      const titles = {
+        'A': 'Treino A',
+        'B': 'Treino B',
+        'cardio': 'Cardio + Mobilidade'
+      };
+      
+      document.getElementById('workout-title').textContent = titles[type];
+      document.getElementById('workout-date').valueAsDate = new Date();
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('workout-screen').classList.remove('hidden');
+    }
+
+    // Voltar ao menu
+    function backToMenu() {
+      document.getElementById('workout-screen').classList.add('hidden');
+      document.getElementById('main-menu').classList.remove('hidden');
+      updateStats();
+    }
+
+    // Salvar treino
+    function saveWorkout() {
+      const date = document.getElementById('workout-date').value;
+      if (!date) {
+        showToast('Selecione uma data!', 'error');
+        return;
+      }
+
+      const data = loadData();
+      const workout = {
+        id: Date.now(),
+        type: currentWorkout,
+        date: date,
+        weight: parseFloat(document.getElementById('weight').value) || null,
+        waist: parseFloat(document.getElementById('waist').value) || null,
+        observation: document.getElementById('observation').value,
+        completed: true,
+        timestamp: new Date().toISOString()
+      };
+
+      data.workouts.push(workout);
+      saveData(data);
+      
+      showToast('Treino salvo com sucesso!');
+      
+      // Limpar campos
+      document.getElementById('weight').value = '';
+      document.getElementById('waist').value = '';
+      document.getElementById('observation').value = '';
+      
+      backToMenu();
+    }
+
+    // Atualizar estatísticas
+    function updateStats() {
+      const data = loadData();
+      const workouts = data.workouts;
+      
+      // Total
+      document.getElementById('total-count').textContent = workouts.length;
+      
+      // Esta semana (últimos 7 dias)
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const weekWorkouts = workouts.filter(w => new Date(w.date) >= weekAgo);
+      document.getElementById('week-count').textContent = weekWorkouts.length;
+      
+      // Últimos 3 treinos
+      const last3 = workouts.slice(-3);
+      document.getElementById('last3-count').textContent = last3.length;
+      
+      // Atualizar histórico
+      updateHistory(workouts);
+    }
+
+    // Atualizar lista de histórico
+    function updateHistory(workouts) {
+      const historyList = document.getElementById('history-list');
+      
+      if (workouts.length === 0) {
+        historyList.innerHTML = '<p style="color: #8892b0;">Nenhum treino registrado ainda.</p>';
+        return;
+      }
+      
+      const recent = workouts.slice().reverse().slice(0, 10);
+      historyList.innerHTML = recent.map(w => {
+        const date = new Date(w.date).toLocaleDateString('pt-BR');
+        const type = w.type === 'cardio' ? 'Cardio' : `Treino ${w.type}`;
+        let details = type;
+        if (w.weight) details += ` · ${w.weight}kg`;
+        if (w.waist) details += ` · ${w.waist}cm abd`;
+        
+        return `
+          <div class="history-item">
+            <div class="history-date">${date}</div>
+            <div class="history-details">${details}</div>
+            ${w.observation ? `<div class="history-details" style="margin-top: 4px; font-style: italic;">"${w.observation}"</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Exportar dados
+    function exportData() {
+      const data = loadData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `backup-treino-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Backup exportado!');
+    }
+
+    // Importar dados
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.workouts && Array.isArray(data.workouts)) {
+            saveData(data);
+            updateStats();
+            showToast('Backup importado com sucesso!');
+          } else {
+            throw new Error('Formato inválido');
+          }
+        } catch (err) {
+          showToast('Erro ao importar arquivo!', 'error');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    // Limpar todos os dados
+    function clearAllData() {
+      if (confirm('Tem certeza que deseja apagar TODOS os dados? Esta ação não pode ser desfeita!')) {
+        localStorage.removeItem(DB_KEY);
+        updateStats();
+        showToast('Todos os dados foram apagados.');
+      }
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', () => {
+      updateStats();
+      
+      // Solicitar permissão para notificações
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    });
+
+    // Atalho para adicionar à tela inicial (PWA)
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+  </script>
+</body>
+</html>
