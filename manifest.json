@@ -1,6 +1,6 @@
 {
-  "name": "Meu Treino",
-  "short_name": "Treino",
+  "name": "Meu Melhor Treino",
+  "short_name": "Melhor Treino",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
