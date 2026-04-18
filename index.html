@@ -15,7 +15,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0b0f14 0%, #1a1f2e 100%);
+      background: #0b0f14;
       color: #e0e0e0;
       min-height: 100vh;
       padding: 16px;
@@ -50,6 +50,7 @@
     .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4); }
     .btn-secondary { background: rgba(255, 255, 255, 0.1); color: #e0e0e0; }
     .btn-danger { background: linear-gradient(135deg, #ff4757 0%, #cc0033 100%); color: white; }
+    .btn-success { background: linear-gradient(135deg, #2ed573 0%, #1a9b5a 100%); color: white; }
     .workout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
     .workout-btn {
       padding: 12px;
@@ -66,7 +67,7 @@
       border-color: #00d4ff;
     }
     .form-group { margin-bottom: 16px; }
-    label { display: block; margin-bottom: 6px; color: #ccd6f6; font-weight: 500; }
+    label { display: block; margin-bottom: 6px; color: #ccd6f6; font-weight: 500; font-size: 0.9em; }
     input, textarea, select {
       width: 100%;
       padding: 12px;
@@ -99,26 +100,98 @@
     }
     .history-date { color: #00d4ff; font-weight: 600; }
     .history-details { color: #8892b0; font-size: 0.9em; }
-    .exercise-list { margin: 16px 0; }
-    .exercise-item {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      margin-bottom: 8px;
+    
+    /* Card de exercício individual */
+    .exercise-card {
       background: rgba(255, 255, 255, 0.03);
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .exercise-item input[type="checkbox"] {
-      width: auto;
-      margin-right: 12px;
+    .exercise-card.completed {
+      border-color: #2ed573;
+      background: rgba(46, 213, 115, 0.05);
+    }
+    .exercise-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .exercise-name {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #e0e0e0;
+      flex: 1;
+    }
+    .exercise-number {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    .exercise-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .exercise-fields .form-group {
+      margin-bottom: 0;
+    }
+    .exercise-fields input {
+      padding: 10px;
+      font-size: 0.95em;
+    }
+    .exercise-fields textarea {
+      padding: 10px;
+      font-size: 0.95em;
+      resize: vertical;
+    }
+    .exercise-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
       cursor: pointer;
       accent-color: #00d4ff;
     }
-    .exercise-item label {
+    .checkbox-wrapper label {
       margin: 0;
       cursor: pointer;
-      flex: 1;
+      font-weight: 600;
+      color: #e0e0e0;
+    }
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 0.9em;
+      width: auto;
+      margin: 0;
+    }
+    .exercise-counter {
+      text-align: center;
+      color: #00d4ff;
+      font-weight: 600;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 8px;
+      font-size: 1.1em;
     }
     .toast {
       position: fixed;
@@ -135,20 +208,11 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .hidden { display: none; }
-    .section { margin-bottom: 24px; }
-    .exercise-counter {
-      text-align: center;
-      color: #00d4ff;
-      font-weight: 600;
-      margin-bottom: 12px;
-      padding: 8px;
-      background: rgba(0, 212, 255, 0.1);
-      border-radius: 8px;
-    }
+    
     @media (max-width: 480px) {
       h1 { font-size: 1.6em; }
       .stats { grid-template-columns: 1fr; }
-      .exercise-item { padding: 8px; }
+      .exercise-fields { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -163,7 +227,7 @@
     <div id="main-menu">
       <div class="card">
         <h2>Escolha o treino</h2>
-        <p>Selecione um treino para ver os exercícios e registrar seu progresso.</p>
+        <p>Selecione um treino para registrar peso, reps e séries de cada exercício.</p>
         <div class="workout-grid">
           <button class="workout-btn" onclick="selectWorkout('A')">Treino A</button>
           <button class="workout-btn" onclick="selectWorkout('B')">Treino B</button>
@@ -223,8 +287,8 @@
         </div>
 
         <div class="form-group">
-          <label for="weight">Peso (kg) - opcional</label>
-          <input type="number" id="weight" step="0.1" placeholder="Ex: 75.5">
+          <label for="body-weight">Peso corporal (kg) - opcional</label>
+          <input type="number" id="body-weight" step="0.1" placeholder="Ex: 75.5">
         </div>
 
         <div class="form-group">
@@ -233,18 +297,17 @@
         </div>
 
         <div class="form-group">
-          <label for="observation">Observação do dia</label>
-          <textarea id="observation" rows="3" placeholder="Como foi o treino? Cargas usadas? Sensações?"></textarea>
+          <label for="observation">Observação geral do treino</label>
+          <textarea id="observation" rows="3" placeholder="Como foi o treino geral?"></textarea>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label>Exercícios concluídos:</label>
-          <div class="exercise-list" id="exercise-list">
-            <!-- Exercícios serão inseridos aqui dinamicamente -->
-          </div>
-        </div>
+      <div id="exercises-container">
+        <!-- Cards de exercícios serão inseridos aqui -->
+      </div>
 
-        <button class="btn" onclick="saveWorkout()">✅ Salvar Treino</button>
+      <div style="margin-top: 20px;">
+        <button class="btn btn-success" onclick="saveWorkout()">✅ Salvar Treino Completo</button>
         <button class="btn btn-secondary" onclick="backToMenu()">← Voltar ao menu</button>
       </div>
     </div>
@@ -341,24 +404,81 @@
       updateExerciseCounter();
     }
 
-    // Renderizar exercícios
+    // Renderizar exercícios com campos individuais
     function renderExercises(type) {
-      const list = document.getElementById('exercise-list');
+      const container = document.getElementById('exercises-container');
       const exerciseList = exercises[type] || [];
       
-      list.innerHTML = exerciseList.map((exercise, index) => `
-        <div class="exercise-item">
-          <input type="checkbox" id="exercise-${index}" onchange="updateExerciseCounter()">
-          <label for="exercise-${index}">${exercise}</label>
+      container.innerHTML = exerciseList.map((exercise, index) => `
+        <div class="exercise-card" id="exercise-card-${index}">
+          <div class="exercise-header">
+            <span class="exercise-number">#${index + 1}</span>
+            <span class="exercise-name">${exercise}</span>
+          </div>
+          
+          <div class="exercise-fields">
+            <div class="form-group">
+              <label>Séries × Reps</label>
+              <input type="text" id="sets-reps-${index}" placeholder="3 x 12-15" oninput="updateExerciseCounter()">
+            </div>
+            <div class="form-group">
+              <label>Carga (kg)</label>
+              <input type="number" id="weight-${index}" step="0.5" placeholder="Ex: 45" oninput="updateExerciseCounter()">
+            </div>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>Anotação rápida</label>
+            <textarea id="note-${index}" rows="2" placeholder="Ex: Última série até falha" style="resize: vertical;"></textarea>
+          </div>
+          
+          <div class="exercise-actions">
+            <div class="checkbox-wrapper">
+              <input type="checkbox" id="done-${index}" onchange="toggleExerciseDone(${index})">
+              <label for="done-${index}">Marcar feito</label>
+            </div>
+            <button class="btn btn-secondary btn-small" onclick="clearExercise(${index})">Limpar</button>
+          </div>
         </div>
       `).join('');
     }
 
+    // Marcar/desmarcar exercício como feito
+    function toggleExerciseDone(index) {
+      const checkbox = document.getElementById(`done-${index}`);
+      const card = document.getElementById(`exercise-card-${index}`);
+      
+      if (checkbox.checked) {
+        card.classList.add('completed');
+      } else {
+        card.classList.remove('completed');
+      }
+      
+      updateExerciseCounter();
+    }
+
+    // Limpar campos de um exercício
+    function clearExercise(index) {
+      document.getElementById(`sets-reps-${index}`).value = '';
+      document.getElementById(`weight-${index}`).value = '';
+      document.getElementById(`note-${index}`).value = '';
+      document.getElementById(`done-${index}`).checked = false;
+      document.getElementById(`exercise-card-${index}`).classList.remove('completed');
+      updateExerciseCounter();
+    }
+
     // Atualizar contador de exercícios
     function updateExerciseCounter() {
-      const checkboxes = document.querySelectorAll('#exercise-list input[type="checkbox"]');
-      const total = checkboxes.length;
-      const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const exerciseList = exercises[currentWorkout] || [];
+      const total = exerciseList.length;
+      
+      let completed = 0;
+      exerciseList.forEach((_, index) => {
+        const checkbox = document.getElementById(`done-${index}`);
+        if (checkbox && checkbox.checked) {
+          completed++;
+        }
+      });
       
       document.getElementById('exercise-counter').textContent = `${completed}/${total} exercícios concluídos`;
       
@@ -379,7 +499,7 @@
       updateStats();
     }
 
-    // Salvar treino
+    // Salvar treino completo
     function saveWorkout() {
       const date = document.getElementById('workout-date').value;
       if (!date) {
@@ -387,21 +507,42 @@
         return;
       }
 
-      const checkboxes = document.querySelectorAll('#exercise-list input[type="checkbox"]');
-      const completedExercises = Array.from(checkboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.nextElementSibling.textContent);
+      const exerciseList = exercises[currentWorkout] || [];
+      const completedExercises = [];
+      const skippedExercises = [];
+
+      exerciseList.forEach((exercise, index) => {
+        const checkbox = document.getElementById(`done-${index}`);
+        const setsReps = document.getElementById(`sets-reps-${index}`).value;
+        const weight = document.getElementById(`weight-${index}`).value;
+        const note = document.getElementById(`note-${index}`).value;
+        
+        const exerciseData = {
+          name: exercise,
+          setsReps: setsReps || '',
+          weight: weight ? parseFloat(weight) : null,
+          note: note || '',
+          done: checkbox ? checkbox.checked : false
+        };
+
+        if (checkbox && checkbox.checked) {
+          completedExercises.push(exerciseData);
+        } else {
+          skippedExercises.push(exerciseData);
+        }
+      });
 
       const data = loadData();
       const workout = {
         id: Date.now(),
         type: currentWorkout,
         date: date,
-        weight: parseFloat(document.getElementById('weight').value) || null,
+        bodyWeight: parseFloat(document.getElementById('body-weight').value) || null,
         waist: parseFloat(document.getElementById('waist').value) || null,
         observation: document.getElementById('observation').value,
         completedExercises: completedExercises,
-        totalExercises: checkboxes.length,
+        skippedExercises: skippedExercises,
+        totalExercises: exerciseList.length,
         completedCount: completedExercises.length,
         timestamp: new Date().toISOString()
       };
@@ -409,12 +550,12 @@
       data.workouts.push(workout);
       saveData(data);
       
-      showToast(`Treino salvo! ${completedExercises.length}/${checkboxes.length} exercícios concluídos.`);
+      showToast(`Treino salvo! ${completedExercises.length}/${exerciseList.length} exercícios concluídos.`);
       
-      document.getElementById('weight').value = '';
+      // Limpar campos
+      document.getElementById('body-weight').value = '';
       document.getElementById('waist').value = '';
       document.getElementById('observation').value = '';
-      checkboxes.forEach(cb => cb.checked = false);
       
       backToMenu();
     }
@@ -462,7 +603,7 @@
         const completed = w.completedCount || 0;
         const total = w.totalExercises || 0;
         let details = `${type} · ${completed}/${total} exercícios`;
-        if (w.weight) details += ` · ${w.weight}kg`;
+        if (w.bodyWeight) details += ` · ${w.bodyWeight}kg`;
         if (w.waist) details += ` · ${w.waist}cm abd`;
         
         return `
