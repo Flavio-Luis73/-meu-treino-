@@ -362,7 +362,6 @@
       
       document.getElementById('exercise-counter').textContent = `${completed}/${total} exercícios concluídos`;
       
-      // Atualizar cor do contador
       const counter = document.getElementById('exercise-counter');
       if (completed === total) {
         counter.style.background = 'rgba(46, 213, 115, 0.2)';
@@ -412,7 +411,6 @@
       
       showToast(`Treino salvo! ${completedExercises.length}/${checkboxes.length} exercícios concluídos.`);
       
-      // Limpar campos
       document.getElementById('weight').value = '';
       document.getElementById('waist').value = '';
       document.getElementById('observation').value = '';
@@ -527,13 +525,11 @@
     document.addEventListener('DOMContentLoaded', () => {
       updateStats();
       
-      // Solicitar permissão para notificações
       if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
       }
     });
 
-    // Atalho para adicionar à tela inicial (PWA)
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
